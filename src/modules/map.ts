@@ -1,12 +1,11 @@
 import { context } from "..";
-import Movable from "./movable";
-import Sprite from "./sprites";
+import Sprite from "./sprite";
 
 export default class Map extends Sprite {
-  position: Movable;
+  position: Position;
   constructor(opts: MapInterface) {
     super(opts.sprite);
-    this.position = new Movable(opts.position)
+    this.position = this.position
   }
   draw() {
     context.drawImage(this.image, this.position.x,this.position.y)

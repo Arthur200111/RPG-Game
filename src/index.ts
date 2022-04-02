@@ -2,6 +2,13 @@ import "./styles/main.scss";
 import Creature from "./modules/creature";
 import mapImg from "./assets/pkmn_map.png";
 import Map from "./modules/map";
+import playerImgR from "./assets/playerRight.png";
+import playerImgD from "./assets/playerDown.png";
+import playerImgU from "./assets/playerUp.png";
+import playerImgL from "./assets/playerLeft.png";
+import livingEntity from "./modules/livingEntity";
+import auraI from "./assets/aura.png";
+import Sprite from "./modules/sprite";
 
 const canvas = <HTMLCanvasElement>document.getElementById("canvas");
 export const context = canvas.getContext("2d");
@@ -23,22 +30,87 @@ bgImg.src = mapImg;
 const currentMap = new Map({
   sprite: {
     img: bgImg,
-  },
-  position: {
-    x: -1054,
-    y: -760,
+    position: {
+      x: -1054,
+      y: -760,
+    },
+    frames: {
+      max: 0,
+      ellapsed_max: 0,
+    },
   },
 });
+
+const playerDownImg = new Image();
+playerDownImg.src = playerImgD;
+
+const playerUpImg = new Image();
+playerUpImg.src = playerImgU;
+
+const playerLeftImg = new Image();
+playerLeftImg.src = playerImgL;
+
+const playerRightImg = new Image();
+playerRightImg.src = playerImgR;
+
+export const player = new livingEntity({
+  sprite: {
+    img: playerDownImg,
+    position: {
+      x: canvas.width / 2 - 192 / 8,
+      y: canvas.height / 2 - 68 / 2,
+    },
+    frames: {
+      max: 4,
+      ellapsed_max: 10,
+    },
+  },
+  images: {
+    up: playerUpImg,
+    down: playerDownImg,
+    left: playerLeftImg,
+    right: playerRightImg,
+  },
+});
+
+const auraImg = new Image();
+auraImg.src = auraI;
+
+const aura = new Sprite({
+  frames: {
+    max: 4,
+    ellapsed_max: 10,
+  },
+  img: auraImg,
+  position: {
+    x: canvas.width / 2 - 192 / 8,
+    y: canvas.height / 2,
+  },
+});
+aura.resume_animation()
 
 function animate() {
   const animateId = window.requestAnimationFrame(animate);
 
-  currentMap.draw()
+  currentMap.draw();
+  player.draw();
+  aura.draw();
 
-  if (keys.up && keys.last == "up") currentMap.position.move(0, 6);
-  else if (keys.down && keys.last == "down") currentMap.position.move(0, -6);
-  else if (keys.right && keys.last == "right") currentMap.position.move(-6, 0);
-  else if (keys.left && keys.last == "left") currentMap.position.move(6, 0);
+  if (keys.up && keys.last == "up") {
+    currentMap.move(0, 6);
+    player.change_direction("up");
+  } else if (keys.down && keys.last == "down") {
+    currentMap.move(0, -6);
+    player.change_direction("down");
+  } else if (keys.right && keys.last == "right") {
+    currentMap.move(-6, 0);
+    player.change_direction("right");
+  } else if (keys.left && keys.last == "left") {
+    currentMap.move(6, 0);
+    player.change_direction("left");
+  } else if (player.animating) {
+    player.stop_animation();
+  }
 }
 
 animate();

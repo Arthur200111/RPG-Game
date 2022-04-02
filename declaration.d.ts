@@ -5,8 +5,17 @@ interface Position {
   y: number;
 }
 
+interface Frames {
+  current?: number;
+  max: number;
+  ellapsed?: number;
+  ellapsed_max: number;
+}
+
 interface SpriteInterface {
+  frames: Frames;
   img: HTMLImageElement;
+  position: Position;
 }
 
 interface hitBoxInterface {
@@ -21,13 +30,25 @@ interface CreatureInterface {
 
 interface MapInterface {
   sprite: SpriteInterface;
-  position: Position;
 }
 
-interface Keys{
+interface Keys {
   up: boolean;
-  down : boolean;
+  down: boolean;
   right: boolean;
   left: boolean;
   last: string;
+}
+
+interface DirectionImages {
+  [up: string]: HTMLImageElement
+  down: HTMLImageElement;
+  left: HTMLImageElement;
+  right: HTMLImageElement;
+}
+
+interface livingEntityInterface {
+  sprite: SpriteInterface;
+  images: DirectionImages;
+  hp ?: number,
 }

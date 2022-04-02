@@ -1,4 +1,4 @@
-import Sprite from "./sprites";
+import Sprite from "./sprite";
 
 export default class Creature extends Sprite {
   constructor(opts: CreatureInterface) {
