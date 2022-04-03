@@ -9,12 +9,49 @@ import playerImgL from "./assets/playerLeft.png";
 import livingEntity from "./modules/livingEntity";
 import auraI from "./assets/aura.png";
 import Sprite from "./modules/sprite";
+import {
+  collisionLeft,
+  collisionDown,
+  collisionRight,
+  collisionUp,
+} from "./assets/zones/collisionZones";
+import Zone from "./modules/zone";
+import HitBox from "./modules/hitBox";
+import Collisions from "./modules/collisions";
 
 const canvas = <HTMLCanvasElement>document.getElementById("canvas");
 export const context = canvas.getContext("2d");
 
+export const collisions: Collisions = new Collisions({
+  collisionDown: {
+    code: 1027,
+    map: collisionDown,
+  },
+  collisionRight: {
+    code: 1029,
+    map: collisionRight,
+  },
+  collisionUp: {
+    code: 1033,
+    map: collisionUp,
+  },
+  CollisionLeft: {
+    code: 1031,
+    map: collisionLeft,
+  },
+});
+
 canvas.width = 1024;
 canvas.height = 576;
+
+const a: HitBox[] = [
+  new HitBox({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  }),
+];
 
 const keys: Keys = {
   up: false,
@@ -71,6 +108,13 @@ export const player = new livingEntity({
     left: playerLeftImg,
     right: playerRightImg,
   },
+  hitBox: {
+    x: canvas.width / 2 - 192 / 8 + 6,
+    y: canvas.height / 2 - 68 / 2 + 40,
+    width: 36,
+    height: 24,
+    color: "rgba(255,0,0,0.4)",
+  },
 });
 
 const auraImg = new Image();
@@ -87,27 +131,41 @@ const aura = new Sprite({
     y: canvas.height / 2,
   },
 });
-aura.resume_animation()
+aura.resume_animation();
 
 function animate() {
   const animateId = window.requestAnimationFrame(animate);
 
   currentMap.draw();
   player.draw();
+  // player.hitBox.draw();
   aura.draw();
+  // collisions.draw()
 
   if (keys.up && keys.last == "up") {
-    currentMap.move(0, 6);
     player.change_direction("up");
+    if (player.can_move(0,6,keys.last)) {
+      currentMap.move(0, 6);
+      collisions.move(0, 6);
+    }
   } else if (keys.down && keys.last == "down") {
-    currentMap.move(0, -6);
     player.change_direction("down");
+    if (player.can_move(0,-6,keys.last)) {
+      currentMap.move(0, -6);
+      collisions.move(0, -6);
+    }
   } else if (keys.right && keys.last == "right") {
-    currentMap.move(-6, 0);
     player.change_direction("right");
+    if (player.can_move(-6,0,keys.last)) {
+      currentMap.move(-6, 0);
+      collisions.move(-6, 0);
+    }
   } else if (keys.left && keys.last == "left") {
-    currentMap.move(6, 0);
     player.change_direction("left");
+    if (player.can_move(6,0,keys.last)) {
+      currentMap.move(6, 0);
+      collisions.move(6, 0);
+    }
   } else if (player.animating) {
     player.stop_animation();
   }

@@ -18,12 +18,6 @@ interface SpriteInterface {
   position: Position;
 }
 
-interface hitBoxInterface {
-  x: number;
-  y: number;
-  color?: string;
-}
-
 interface CreatureInterface {
   sprite: SpriteInterface;
 }
@@ -41,14 +35,36 @@ interface Keys {
 }
 
 interface DirectionImages {
-  [up: string]: HTMLImageElement
+  [up: string]: HTMLImageElement;
   down: HTMLImageElement;
   left: HTMLImageElement;
   right: HTMLImageElement;
 }
 
+interface hitBoxInterface {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  color?: string;
+}
+
 interface livingEntityInterface {
+  hitBox: hitBoxInterface;
   sprite: SpriteInterface;
   images: DirectionImages;
-  hp ?: number,
+  hp?: number;
+}
+
+interface ZoneInterface {
+  code: number;
+  map: number[];
+  color?: string;
+}
+
+interface CollisionsInterface{
+  collisionUp: ZoneInterface;
+  collisionDown: ZoneInterface;
+  collisionRight: ZoneInterface;
+  CollisionLeft: ZoneInterface;
 }
